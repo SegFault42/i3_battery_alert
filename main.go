@@ -33,7 +33,7 @@ func main() {
 
 	notify.Init("Low Battery !")
 
-	if batteryLevel < 100 || batteryLevel == 10 || batteryLevel == 5 {
+	if batteryLevel == 20 || batteryLevel == 10 || batteryLevel == 5 {
 		notif := notify.NotificationNew("Low Battery !", "Battery level: "+strconv.Itoa(int(batteryLevel))+"%", "dialog-information")
 		notif.SetUrgency(notify.NOTIFY_URGENCY_CRITICAL)
 		notif.Show()
