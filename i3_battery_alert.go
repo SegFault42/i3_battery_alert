@@ -47,6 +47,17 @@ func main() {
 			return
 		}
 
+		// Reset var if battery level charge up to limit (20, 10 or 5)
+		if batteryLevel > 20 {
+			alert.twentyPercent = false
+		}
+		if batteryLevel > 10 {
+			alert.tenPercent = false
+		}
+		if batteryLevel > 5 {
+			alert.fivePercent = false
+		}
+
 		// make a popup
 		if batteryLevel == 20 && alert.twentyPercent == false {
 			notif = notify.NotificationNew("Low Battery !", "Battery level: "+strconv.Itoa(int(batteryLevel))+"%", "dialog-information")
