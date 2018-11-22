@@ -1,4 +1,4 @@
-NAME = i3_battery_converter
+NAME = i3_battery_alert
 
 SRCS = ./i3_battery_alert.go
 
