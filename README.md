@@ -5,7 +5,7 @@ little tool to pop a message when your laptop battery is low
 
 - go get "github.com/distatus/battery"
 - go get "github.com/mqu/go-notify"
-- go build -o i3_battery_alert i3_battery_alert.go 
+- make
 
 ### Usage
 
