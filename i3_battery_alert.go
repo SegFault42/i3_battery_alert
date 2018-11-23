@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/distatus/battery"
 	"github.com/mqu/go-notify"
@@ -91,6 +92,6 @@ func main() {
 			notif = nil
 		}
 
-		//time.Sleep(60 * time.Second)
+		time.Sleep(60 * time.Second)
 	}
 }
