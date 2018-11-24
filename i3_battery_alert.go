@@ -47,15 +47,15 @@ func resetVar(alert notifAlert, batteryLevel uint8) {
 
 func setNotification(alert *notifAlert, batteryLevel uint8) (notif *notify.NotifyNotification) {
 
-	if batteryLevel == 20 && alert.twentyPercent == false {
+	if batteryLevel < 20 && alert.twentyPercent == false {
 		notif = notify.NotificationNew("Low Battery !", "Battery level: "+strconv.Itoa(int(batteryLevel))+"%", "dialog-information")
 		notif.SetUrgency(notify.NOTIFY_URGENCY_CRITICAL)
 		alert.twentyPercent = true
-	} else if batteryLevel == 10 && alert.tenPercent == false {
+	} else if batteryLevel < 10 && alert.tenPercent == false {
 		notif = notify.NotificationNew("Low Battery !", "Battery level: "+strconv.Itoa(int(batteryLevel))+"%", "dialog-information")
 		notif.SetUrgency(notify.NOTIFY_URGENCY_CRITICAL)
 		alert.tenPercent = true
-	} else if batteryLevel == 5 && alert.fivePercent == false {
+	} else if batteryLevel < 5 && alert.fivePercent == false {
 		notif = notify.NotificationNew("Low Battery !", "Battery level: "+strconv.Itoa(int(batteryLevel))+"%", "dialog-information")
 		notif.SetUrgency(notify.NOTIFY_URGENCY_CRITICAL)
 		alert.fivePercent = true
