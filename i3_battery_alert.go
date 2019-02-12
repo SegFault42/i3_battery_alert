@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"strconv"
-	"time"
 
 	"github.com/distatus/battery"
 	"github.com/mqu/go-notify"
@@ -15,26 +14,19 @@ type notifAlert struct {
 	fivePercent   bool
 }
 
-func getBatteryLevel() (uint8, error) {
+func getBatteryLevel(battery *battery.Battery) uint8 {
 
 	var batteryLevel uint8 = 0
-
-	// Get battery information
-	battery, err := battery.Get(0)
-	if err != nil {
-		fmt.Println("Could not get battery info!")
-		return batteryLevel, err
-	}
 
 	// calculate percentage
 	batteryLevel = uint8((battery.Current / battery.Full) * 100)
 
-	return batteryLevel, err
+	return batteryLevel
 }
 
 func resetVar(alert notifAlert, batteryLevel uint8) {
 
-	if batteryLevel > 20 {
+	if batteryLevel > 14 {
 		alert.twentyPercent = false
 	}
 	if batteryLevel > 10 {
@@ -47,7 +39,7 @@ func resetVar(alert notifAlert, batteryLevel uint8) {
 
 func setNotification(alert *notifAlert, batteryLevel uint8) (notif *notify.NotifyNotification) {
 
-	if batteryLevel < 20 && alert.twentyPercent == false {
+	if batteryLevel < 14 && alert.twentyPercent == false {
 		notif = notify.NotificationNew("Low Battery !", "Battery level: "+strconv.Itoa(int(batteryLevel))+"%", "dialog-information")
 		notif.SetUrgency(notify.NOTIFY_URGENCY_CRITICAL)
 		alert.twentyPercent = true
@@ -74,24 +66,33 @@ func main() {
 	notify.Init("Low Battery !")
 
 	for {
-		// Get battery level in percent
-		batteryLevel, err := getBatteryLevel()
+		// Get battery info
+		batt, err := battery.Get(0)
 		if err != nil {
+			fmt.Println("Could not get battery info!")
 			return
 		}
 
-		// Reset var if battery level charge up to limit (20, 10 or 5)
-		resetVar(alert, batteryLevel)
+		if batt.State.String() == "Discharging" {
+			// Get battery level in percent
+			batteryLevel := getBatteryLevel(batt)
+			if err != nil {
+				return
+			}
 
-		// set a popup
-		notif = setNotification(&alert, batteryLevel)
+			// Reset var if battery level charge up to limit (20, 10 or 5)
+			resetVar(alert, batteryLevel)
 
-		// Show popup
-		if notif != nil {
-			notif.Show()
-			notif = nil
+			// set a popup
+			notif = setNotification(&alert, batteryLevel)
+
+			// Show popup
+			if notif != nil {
+				notif.Show()
+				notif = nil
+			}
+
+			//time.Sleep(60 * time.Second)
 		}
-
-		time.Sleep(60 * time.Second)
 	}
 }
