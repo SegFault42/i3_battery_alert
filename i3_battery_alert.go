@@ -56,28 +56,67 @@ func setNotification(alert *notifAlert, batteryLevel uint8) (notif *notify.Notif
 	return
 }
 
+func popupStart() {
+
+	notif := notify.NotificationNew("Started", "i3_battery_alert Started !", "dialog-information")
+
+	notif.SetUrgency(notify.NOTIFY_URGENCY_NORMAL)
+	if notif != nil {
+		notif.Show()
+		notif = nil
+	}
+}
+
+func popupBatteryStat(batt *battery.Battery, stat *bool) {
+
+	var (
+		notif *notify.NotifyNotification = nil
+	)
+
+	if batt.State.String() == "Charging" && *stat == true {
+		notif = notify.NotificationNew("Battery stat", "Charging", "dialog-information")
+		*stat = false
+	} else if batt.State.String() == "Discharging" && *stat == false {
+		notif = notify.NotificationNew("Battery stat", "Discharging", "dialog-information")
+		*stat = true
+	}
+
+	// Show popup
+	if notif != nil {
+		notif.SetUrgency(notify.NOTIFY_URGENCY_NORMAL)
+		notif.Show()
+		notif = nil
+	}
+
+}
+
 func main() {
 
 	var (
+		stat                             = true
 		notif *notify.NotifyNotification = nil
 		alert notifAlert
 	)
 
 	notify.Init("Low Battery !")
 
+	popupStart()
+
 	for {
 		// Get battery info
 		batt, err := battery.Get(0)
 		if err != nil {
 			fmt.Println("Could not get battery info!")
-			return
+			continue
 		}
+
+		popupBatteryStat(batt, &stat)
 
 		if batt.State.String() == "Discharging" {
 			// Get battery level in percent
 			batteryLevel := getBatteryLevel(batt)
 			if err != nil {
-				return
+				continue
 			}
 
 			// Reset var if battery level charge up to limit (20, 10 or 5)
