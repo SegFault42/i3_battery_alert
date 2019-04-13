@@ -40,15 +40,15 @@ func resetVar(alert notifAlert, batteryLevel uint8) {
 func setNotification(alert *notifAlert, batteryLevel uint8) (notif *notify.NotifyNotification) {
 
 	if batteryLevel < 14 && alert.twentyPercent == false {
-		notif = notify.NotificationNew("Low Battery !", "Battery level: "+strconv.Itoa(int(batteryLevel))+"%", "dialog-information")
+		notif = notify.NotificationNew("i3_battery_alert", "Battery level: "+strconv.Itoa(int(batteryLevel))+"%", "dialog-information")
 		notif.SetUrgency(notify.NOTIFY_URGENCY_CRITICAL)
 		alert.twentyPercent = true
 	} else if batteryLevel < 10 && alert.tenPercent == false {
-		notif = notify.NotificationNew("Low Battery !", "Battery level: "+strconv.Itoa(int(batteryLevel))+"%", "dialog-information")
+		notif = notify.NotificationNew("i3_battery_alert", "Battery level: "+strconv.Itoa(int(batteryLevel))+"%", "dialog-information")
 		notif.SetUrgency(notify.NOTIFY_URGENCY_CRITICAL)
 		alert.tenPercent = true
 	} else if batteryLevel < 5 && alert.fivePercent == false {
-		notif = notify.NotificationNew("Low Battery !", "Battery level: "+strconv.Itoa(int(batteryLevel))+"%", "dialog-information")
+		notif = notify.NotificationNew("i3_battery_alert", "Battery level: "+strconv.Itoa(int(batteryLevel))+"%", "dialog-information")
 		notif.SetUrgency(notify.NOTIFY_URGENCY_CRITICAL)
 		alert.fivePercent = true
 	}
@@ -58,7 +58,7 @@ func setNotification(alert *notifAlert, batteryLevel uint8) (notif *notify.Notif
 
 func popupStart() {
 
-	notif := notify.NotificationNew("Started", "i3_battery_alert Started !", "dialog-information")
+	notif := notify.NotificationNew("i3_battery_alert", "Started !", "dialog-information")
 
 	notif.SetUrgency(notify.NOTIFY_URGENCY_NORMAL)
 	if notif != nil {
@@ -74,10 +74,10 @@ func popupBatteryStat(batt *battery.Battery, stat *bool) {
 	)
 
 	if batt.State.String() == "Charging" && *stat == true {
-		notif = notify.NotificationNew("Battery stat", "Charging", "dialog-information")
+		notif = notify.NotificationNew("i3_battery_alert", "Charging", "dialog-information")
 		*stat = false
 	} else if batt.State.String() == "Discharging" && *stat == false {
-		notif = notify.NotificationNew("Battery stat", "Discharging", "dialog-information")
+		notif = notify.NotificationNew("i3_battery_alert", "Discharging", "dialog-information")
 		*stat = true
 	}
 
